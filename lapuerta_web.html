@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Puerta Contenidos</title>
+  <meta name="description" content="Productora teatral argentina. Creamos, producimos y comercializamos contenidos teatrales desde 1996." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #080808;
+      --bg2:       #0f0f0f;
+      --bg3:       #161616;
+      --text:      #f0ebe0;
+      --muted:     #b9b2a6;
+      --gold:      #c9a84c;
+      --gold-dim:  #7a6230;
+      --line:      rgba(201,168,76,0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ───── SCROLLBAR ───── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+    /* ───── NAV ───── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 48px;
+      transition: background 0.4s, padding 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(8,8,8,0.92);
+      backdrop-filter: blur(12px);
+      padding: 16px 48px;
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-logo img {
+      height: 44px;
+      filter: brightness(0) invert(1);
+      transition: opacity 0.3s;
+    }
+    .nav-logo img:hover { opacity: 0.75; }
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-family: 'Jost', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .nav-links a:hover { opacity: 1; color: var(--gold); }
+
+    /* ───── HERO CON VIDEO (AJUSTADO PARA DAR MÁS LUZ) ───── */
+    #hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .hero-video-container {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .hero-video-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      /* Se bajó la opacidad general para que el video se note más claro */
+      background: linear-gradient(to bottom, rgba(8,8,8,0.8) 0%, rgba(8,8,8,0.4) 60%, var(--bg) 100%);
+      z-index: 1;
+    }
+    .hero-overlay::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      background-size: 200px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 1.2s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
+    }
+    .hero-eyebrow {
+      font-family: 'Jost', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 8vw, 110px);
+      font-weight: 300;
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      margin-bottom: 28px;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .hero-subtitle {
+      font-family: 'Jost', sans-serif;
+      font-size: 16px;
+      font-weight: 350;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;max-width: 420px;
+      margin: 0 auto 48px;
+      line-height: 1.8;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      border: 1px solid var(--gold);
+      padding: 14px 32px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .hero-cta:hover { background: var(--gold); color: var(--bg); }
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      animation: fadeUp 1s ease 1.4s forwards;
+    }
+    .hero-scroll span {
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.15); }
+    }
+
+    /* ───── SECTION BASE ───── */
+    section { padding: 120px 48px; }
+    .section-label {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 0 0 40px;
+      height: 1px;
+      background: var(--gold-dim);
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 300;
+      line-height: 1.05;
+      margin-bottom: 24px;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+
+    /* ───── CARTELERA ───── */
+    #cartelera {
+      background: var(--bg2);
+      position: relative;
+      overflow: hidden;
+    }
+    #cartelera::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    }
+    .cartelera-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .cartelera-img-wrap {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
+    .cartelera-img-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border: 1px solid var(--gold-dim);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .cartelera-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s cubic-bezier(0.22,1,0.36,1);
+      display: block;
+    }
+    .cartelera-img-wrap:hover img { transform: scale(1.04); }
+    .cartelera-badge {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 2;
+      background: var(--gold);
+      color: var(--bg);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+    }
+    .cartelera-info { padding: 20px 0; }
+    .show-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(40px, 5vw, 72px);
+      font-weight: 300;
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+    .show-desc {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 40px;
+      max-width: 420px;
+    }
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--gold);
+      color: var(--bg);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 16px 36px;
+      transition: opacity 0.3s;
+    }
+    .btn-gold:hover { opacity: 0.85; }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--muted);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 16px 36px;
+      margin-left: 16px;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ───── PRODUCCIONES ───── */
+    #producciones {
+      background: var(--bg);
+      /* Asegura un espacio uniforme arriba y abajo, y un margen mínimo a los costados */
+      padding: 120px 24px; 
+    }
+    .prod-header {
+      /* Mantiene el texto alineado con el resto de la web (1200px) */
+      max-width: 1200px;
+      margin: 0 auto 64px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 32px;
+    }
+    .prod-count {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 80px;
+      font-weight: 300;
+      color: var(--line);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      user-select: none;
+    }
+    .prod-grid {
+      /* Se amplía el límite de 1200px a 1600px para que abra más a los costados */
+      max-width: 1600px; 
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+    }
+    .prod-item {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .prod-item.featured {
+      grid-column: span 2;
+      aspect-ratio: 2/1;
+    }
+    .prod-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.4s;
+      filter: brightness(0.75) saturate(0.8);
+      display: block;
+    }
+    .prod-item:hover img {
+      transform: scale(1.06);
+      filter: brightness(0.55) saturate(0.6);
+    }
+    .prod-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 24px;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .prod-item:hover .prod-overlay { opacity: 1; }
+    .prod-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .prod-year {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    /* ───── QUIÉNES SOMOS ───── */
+    #quienes {
+      background: var(--bg3);
+      position: relative;
+    }
+    #quienes::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    }
+    .quienes-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: start;
+    }
+    .quienes-text p {
+      font-size: 17px;
+      font-weight: 300;
+      line-height: 1.85;
+      color: rgba(240,235,224,0.8);
+      margin-bottom: 20px;
+    }
+    .quienes-text strong {
+      color: var(--gold);
+      font-weight: 400;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+    .stat-box {
+      background: var(--bg2);
+      padding: 40px 32px;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.3s;
+    }
+    .stat-box:hover { border-color: var(--gold); }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 64px;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ───── CONTACTO / FOOTER ───── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+      padding: 80px 48px 48px;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 64px;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .footer-logo img {
+      height: 36px;
+      filter: brightness(0) invert(1);
+      opacity: 0.5;
+    }
+    .footer-contact {
+      text-align: center;
+    }
+    .footer-contact-label {
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .footer-contact a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color 0.3s;
+    }
+    .footer-contact a:hover { color: var(--gold); }
+    .footer-social {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+    .footer-social a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .footer-social a:hover { color: var(--gold); }
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+    .footer-copy {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+    .footer-nav {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .footer-nav a {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-nav a:hover { color: var(--text); }
+
+    /* ───── REVEAL ANIMATIONS ───── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1),
+                  transform 0.9s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.45s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: none; }
+    }
+
+    /* ───── RESPONSIVE ───── */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      nav.scrolled { padding: 14px 24px; }
+      .nav-links { display: none; }
+      section { padding: 80px 24px; }
+      .cartelera-inner { grid-template-columns: 1fr; gap: 40px; }
+      .prod-grid { grid-template-columns: 1fr 1fr; }
+      .prod-item.featured { grid-column: span 2; }
+      .quienes-inner { grid-template-columns: 1fr; gap: 56px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .prod-header { flex-direction: column; align-items: flex-start; }
+      footer { padding: 60px 24px 40px; }
+      .footer-top { flex-direction: column; align-items: flex-start; gap: 24px; }
+      .footer-contact { text-align: left; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .btn-ghost { margin-left: 0; margin-top: 12px; }
+    }
+    @media (max-width: 600px) {
+      .prod-grid { grid-template-columns: 1fr; }
+      .prod-item.featured { grid-column: span 1; aspect-ratio: 1; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 48px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="main-nav">
+    <a href="#hero" class="nav-logo">
+      <img src="https://www.lapuertacontenidos.com.ar/img/LaPuertaLogo2.png" alt="La Puerta Contenidos" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="#cartelera">Cartelera</a></li>
+      <li><a href="#producciones">Producciones</a></li>
+      <li><a href="#quienes">Nosotros</a></li>
+      <li><a href="#footer">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <section id="hero">
+    <div class="hero-video-container">
+      <video autoplay loop muted playsinline poster="https://cdn.pixabay.com/photo/2017/08/05/15/00/auditorium-2584269_1280.jpg">
+        <source src="https://cdn.pixabay.com/video/2024/11/12/240995_large.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <!-- Unica capa de overlay optimizada para dar más brillo y luz al video -->
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Buenos Aires · Desde 1996</p>
+      <h1 class="hero-title">La Puerta<br /><em>Contenidos</em></h1>
+      <p class="hero-subtitle">Productora teatral argentina.<br />Creamos, producimos y comercializamos<br />experiencias escénicas únicas.</p>
+      <a href="#cartelera" class="hero-cta">Ver cartelera</a>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <section id="cartelera">
+    <div class="cartelera-inner">
+      <div class="cartelera-img-wrap reveal">
+        <div class="cartelera-badge">En cartelera</div>
+        <img
+          src="https://imgplateanet.com.ar/imagenes/img/imagenes/1200x1200/el-chat-de-mamis---una-comedia-en-el-cole.jpg"
+          alt="Corto Circuito — Un Viaje en el Tiempo"
+          loading="lazy"
+        />
+      </div>
+      <div class="cartelera-info reveal reveal-delay-2">
+        <p class="section-label">Cartelera 2026</p>
+        <h2 class="show-title">EL CHAT DE MAMIS<br /><em style="font-style:italic;color:var(--gold)">UNA COMEDIA EN EL COLE</em></h2>
+        <p class="show-desc">
+          El disfraz de la "nena nueva" de séptimo B aparece destrozado, por lo cual la directora del colegio cita a las madres y padres a una reunión en el colegio, pero todo termina en acusaciones cruzadas, reclamos, audios de whatsapp y un caos difícil de resolver. Mientras intentan dilucidar qué pasó con los chicos y el disfraz, salen a la luz secretos y rivalidades entre los grandes y se revela un misterio aún mayor, el problema no lo tienen los chicos...sino los grandes. Cuando el chat de mamis se vuelve real, nadie sobrevive!
+        </p>
+        <a
+          href="https://www.plateanet.com/obra/33741?obra=EL-CHAT-DE-MAMIS---UNA-COMEDIA-EN-EL-COLE&paso=inicio"
+          target="_blank"
+          rel="noopener"
+          class="btn-gold"
+        >
+          Comprar entradas
+        </a>
+        <a href="/chatdemamis.html" class="btn-ghost">Ver producciones</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="producciones">
+    <div class="prod-header">
+      <div class="prod-header-text reveal">
+        <p class="section-label">Trayectoria</p>
+        <h2 class="section-title">Producciones &<br /><em>Coproducciones</em></h2>
+      </div>
+    </div>
+
+    <div class="prod-grid">
+      <div class="prod-item reveal reveal-delay-1">
+        <img
+          src="https://imgplateanet.com.ar/imagenes/img/imagenes/1200x1200/el-chat-de-mamis---una-comedia-en-el-cole.jpg"
+          alt="Producción"
+          loading="lazy"
+        />
+        <div class="prod-overlay">
+          <p class="prod-name">El Chat de mamis</p>
+          <p class="prod-year">Producción</p>
+        </div>
+      </div>
+      <div class="prod-item reveal reveal-delay-1">
+        <img
+          src="https://instagram.faep24-1.fna.fbcdn.net/v/t51.82787-15/669877638_17941594878177701_8715041444545058618_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=Mzg3MTU3MDY4NzQ5NTgyODY5MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTM1MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=Bz6DJ0Q_4PMQ7kNvwEArrb6&_nc_oc=AdpmBLo1cefgx7FXkOD7SW3DCwRpEM7MgQj6Bl7T2Zhp9vipxOYh_KnacQrEJxJHF-0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.faep24-1.fna&_nc_gid=xLw758Lssl0K9f3kjjWrrA&_nc_ss=7a22e&oh=00_Af6t4LYqIuXmEmQ63xjNperx61DspJrU5Qone23dIl0lhg&oe=6A1D2E65"
+          alt="Producción"
+          loading="lazy"
+        />
+        <div class="prod-overlay">
+          <p class="prod-name">Tertawa - España</p>
+          <p class="prod-year">Producción</p>
+        </div>
+      </div>
+      <div class="prod-item reveal reveal-delay-1">
+        <img
+          src="https://www.lapuertacontenidos.com.ar/img/CORBO_UVEET_KEYART_FEED_1080X1080.jpg"
+          alt="Producción"
+          loading="lazy"
+        />
+        <div class="prod-overlay">
+          <p class="prod-name">Cortocircuito</p>
+          <p class="prod-year">Producción</p>
+        </div>
+      </div>
+      <div class="prod-item reveal reveal-delay-1">
+        <img
+          src="https://www.lapuertacontenidos.com.ar/img/MELC_RRS_CUADRADO_1080X1080_6cuotas.jpg"
+          alt="Producción"
+          loading="lazy"
+        />
+        <div class="prod-overlay">
+          <p class="prod-name">Melc</p>
+          <p class="prod-year">Producción</p>
+        </div>
+      </div>
+      <div class="prod-item reveal reveal-delay-1">
+        <img
+          src="https://www.lapuertacontenidos.com.ar/img/BOSSI_1200X1200.jpg"
+          alt="Bossi"
+          loading="lazy"
+        />
+        <div class="prod-overlay">
+          <p class="prod-name">Bossi</p>
+          <p class="prod-year">Producción</p>
+        </div>
+      </div>
+      <div class="prod-item reveal reveal-delay-1">
+        <img
+          src="https://www.lapuertacontenidos.com.ar/img/MAXI-COMICO-MONTEVIDEO.jpg"
+          alt="Maxi Cómico Montevideo"
+          loading="lazy"
+        />
+        <div class="prod-overlay">
+          <p class="prod-name">Maxi Cómico</p>
+          <p class="prod-year">Montevideo</p>
+        </div>
+      </div>
+      <div class="prod-item reveal reveal-delay-2">
+        <img
+          src="https://www.lapuertacontenidos.com.ar/img/TERTAWA_PLATEANET-1200X1200.jpg"
+          alt="Tertawa"
+          loading="lazy"
+        />
+        <div class="prod-overlay">
+          <p class="prod-name">Tertawa</p>
+          <p class="prod-year">Producción</p>
+        </div>
+      </div>
+      <div class="prod-item reveal reveal-delay-2">
+        <img
+          src="https://www.lapuertacontenidos.com.ar/img/1200x1200-tertawamiami.jpg"
+          alt="Tertawa Miami"
+          loading="lazy"
+        />
+        <div class="prod-overlay">
+          <p class="prod-name">Tertawa Miami</p>
+          <p class="prod-year">Gira internacional</p>
+        </div>
+      </div>
+      <div class="prod-item reveal reveal-delay-3">
+        <img
+          src="https://www.lapuertacontenidos.com.ar/img/DABOPE_UN%20PLAN%20PERFECTO_TICKETEK_1080x1080_V2.jpg"
+          alt="Un Plan Perfecto"
+          loading="lazy"
+        />
+        <div class="prod-overlay">
+          <p class="prod-name">Un Plan Perfecto</p>
+          <p class="prod-year">Producción</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="quienes">
+    <div class="quienes-inner">
+      <div>
+        <p class="section-label reveal">Quiénes somos</p>
+        <h2 class="section-title reveal reveal-delay-1">Una productora<br />con <em>historia</em></h2>
+        <div class="quienes-text reveal reveal-delay-2">
+          <p>
+            Somos una productora que crea, produce y comercializa
+            <strong>contenidos teatrales</strong> de primer nivel.
+          </p>
+          <p>
+            Nuestro socio fundador, <strong>Ezequiel Corbo</strong>, produce espectáculos
+            desde <strong>1996</strong> y ha participado a lo largo de su trayectoria
+            profesional en más de 100 producciones teatrales.
+          </p>
+          <p>
+            Con presencia en Argentina, Uruguay, Miami y otros mercados internacionales,
+            llevamos el teatro argentino al mundo.
+          </p>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-box reveal reveal-delay-1">
+          <div class="stat-num" data-target="29">0</div>
+          <div class="stat-label">Años de trayectoria</div>
+        </div>
+        <div class="stat-box reveal reveal-delay-2">
+          <div class="stat-num" data-target="5">0</div>
+          <div class="stat-label">Países</div>
+        </div>
+        <div class="stat-box reveal reveal-delay-3">
+          <div class="stat-num" data-target="1996">0</div>
+          <div class="stat-label">Fundación</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-logo">
+          <img src="https://www.lapuertacontenidos.com.ar/img/LaPuertaLogo2.png" alt="La Puerta Contenidos" />
+        </div>
+        <div class="footer-contact">
+          <p class="footer-contact-label">Contacto</p>
+          <a href="mailto:hola@lapuertacontenidos.com.ar">hola@lapuertacontenidos.com.ar</a>
+        </div>
+        <div class="footer-social">
+          <a href="#" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 La Puerta Contenidos. Todos los derechos reservados.</p>
+        <ul class="footer-nav">
+          <li><a href="#cartelera">Cartelera</a></li>
+          <li><a href="#producciones">Producciones</a></li>
+          <li><a href="#quienes">Nosotros</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Sticky nav ──
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // ── Scroll reveal ──
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }),
+      { threshold: 0.12 }
+    );
+    revealEls.forEach(el => observer.observe(el));
+
+    // ── Counter animation ──
+    function animateCounter(el, target, duration) {
+      const start = performance.now();
+      const update = now => {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target);
+        if (progress < 1) requestAnimationFrame(update);
+        else el.textContent = (target === 1996 ? '' : '+') + target;
+      };
+      requestAnimationFrame(update);
+    }
+    const statObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const el = e.target.querySelector('[data-target]');
+          if (el) {
+            animateCounter(el, parseInt(el.dataset.target), 1800);
+            statObserver.unobserve(e.target);
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat-box').forEach(b => statObserver.observe(b));
+  </script>
+</body>
+</html>

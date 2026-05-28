@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Chat de Mamis — Una Comedia en el Cole</title>
+  <meta name="description" content="Cuando el chat de mamis se vuelve real, nadie sobrevive. Una producción de La Puerta Contenidos." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #080808;
+      --bg2:       #0f0f0f;
+      --bg3:       #161616;
+      --text:      #f0ebe0;
+      --muted:     #b9b2a6;
+      --gold:      #c9a84c;
+      --gold-dim:  #7a6230;
+      --line:      rgba(201,168,76,0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ───── SCROLLBAR ───── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+    /* ───── NAV ───── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 48px;
+      transition: background 0.4s, padding 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(8,8,8,0.95);
+      backdrop-filter: blur(12px);
+      padding: 16px 48px;
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-logo img {
+      height: 44px;
+      filter: brightness(0) invert(1);
+      transition: opacity 0.3s;
+    }
+    .nav-logo img:hover { opacity: 0.75; }
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-family: 'Jost', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .nav-links a:hover { opacity: 1; color: var(--gold); }
+
+    /* ───── HERO ───── */
+    #hero-clean {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 140px 48px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 64px;
+    }
+    .hero-text {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 1s ease forwards 0.2s;
+    }
+    .hero-eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(44px, 6vw, 80px);
+      font-weight: 300;
+      line-height: 1;
+      margin-bottom: 32px;
+    }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-subtitle {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 540px;
+      margin-bottom: 48px;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      color: var(--bg);
+      background: var(--gold);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 16px 36px;
+      transition: opacity 0.3s;
+    }
+    .hero-cta:hover { opacity: 0.9; }
+
+    .hero-image-side {
+      position: relative;
+      aspect-ratio: 1;
+      border: 1px solid var(--line);
+      opacity: 0;
+      transform: scale(0.98);
+      animation: fadeUp 1.2s cubic-bezier(0.22,1,0.36,1) forwards 0.4s;
+    }
+    .hero-image-side img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ───── SECCIONES BASE ───── */
+    section { padding: 100px 48px; }
+    .section-label {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 0 0 40px;
+      height: 1px;
+      background: var(--gold-dim);
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4vw, 54px);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 40px;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+
+    /* ───── SINOPSIS ───── */
+    #sinopsis { background: var(--bg2); }
+    .sinopsis-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .sinopsis-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(22px, 3vw, 32px);
+      line-height: 1.6;
+      color: var(--text);
+      font-weight: 300;
+    }
+
+    /* ───── GALERÍA COMPACTA HORIZONTAL (16:9) ───── */
+    #galeria { background: var(--bg); }
+    #galeria { 
+      background: var(--bg); 
+      padding: 100px 24px; /* Un margen mínimo para que no pegue al borde del navegador */
+    }
+    .galeria-grid {
+      max-width: 100%; /* Elimina el tope del centro y estira todo lo que dé la pantalla */
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 16px; /* Subí un pelín el espacio para que respire con el nuevo tamaño gigante */
+    }
+    /* ───── ANIMACIÓN HOVER EN IMÁGENES ───── */
+    .galeria-item {
+      position: relative;
+      aspect-ratio: 16 / 9; 
+      overflow: hidden; /* Corta la imagen para que no tape a las de al lado al agrandarse */
+      border: 1px solid var(--line);
+      background: var(--bg2);
+    }
+    
+    .galeria-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      /* Controla la velocidad y suavidad del movimiento (0.4 segundos) */
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
+    }
+    
+    /* Cuando pasás el mouse, la imagen se agranda un 8% */
+    .galeria-item:hover img {
+      transform: scale(1.08); 
+    }
+
+    /* ───── VIDEOS REDES ───── */
+    #videos {
+      background: var(--bg3);
+      position: relative;
+    }
+    .videos-inner { max-width: 1200px; margin: 0 auto; }
+    .mamis-videos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    .video-card {
+      background: var(--bg2);
+      border: 1px solid var(--line);
+      aspect-ratio: 9 / 16; 
+      position: relative;
+      overflow: hidden;
+    }
+    .video-card video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ───── FOOTER ───── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+      padding: 80px 48px 48px;
+    }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 64px;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .footer-logo img { height: 36px; filter: brightness(0) invert(1); opacity: 0.5; }
+    .footer-contact a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 300;
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-contact a:hover { color: var(--gold); }
+    .footer-social a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+    .footer-copy { font-size: 10px; color: var(--muted); }
+
+    /* ───── ANIMACIONES ───── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    @keyframes fadeUp { to { opacity: 1; transform: none; } }
+
+    /* ───── RESPONSIVE ───── */
+    @media (max-width: 1024px) {
+      .galeria-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      nav.scrolled { padding: 14px 24px; }
+      .nav-links { display: none; }
+      #hero-clean { grid-template-columns: 1fr; padding-top: 120px; gap: 40px; text-align: center; }
+      .hero-subtitle { margin: 0 auto 40px; }
+      .hero-image-side { max-width: 450px; margin: 0 auto; }
+      section { padding: 80px 24px; }
+      .galeria-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } /* Mantiene filas ordenadas en tablets */
+      .mamis-videos-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+    }
+    @media (max-width: 480px) {
+      .galeria-grid { grid-template-columns: 1fr; } /* Verticales individuales en celus */
+      .mamis-videos-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="main-nav">
+    <a href="#hero-clean" class="nav-logo">
+      <img src="https://www.lapuertacontenidos.com.ar/img/LaPuertaLogo2.png" alt="La Puerta Contenidos" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="#sinopsis">La Historia</a></li>
+      <li><a href="#galeria">Imágenes</a></li>
+      <li><a href="#videos">Videos</a></li>
+      <li><a href="#footer">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <header id="hero-clean">
+    <div class="hero-text">
+      <p class="hero-eyebrow">Temporada Teatral 2026</p>
+      <h1 class="hero-title">EL CHAT DE MAMIS<br /><em>Una Comedia en el Cole</em></h1>
+      <p class="hero-subtitle">Cuando el grupo de WhatsApp de la escuela se vuelve real, nadie sobrevive. Una mirada desopilante y ácida sobre el mundo de los adultos.</p>
+      <a href="https://www.plateanet.com/obra/33741?obra=EL-CHAT-DE-MAMIS---UNA-COMEDIA-EN-EL-COLE&paso=inicio" target="_blank" rel="noopener" class="hero-cta">Comprar Entradas</a>
+    </div>
+    <div class="hero-image-side">
+      <img src="https://imgplateanet.com.ar/imagenes/img/imagenes/1200x1200/el-chat-de-mamis---una-comedia-en-el-cole.jpg" alt="El Chat de Mamis Cartelera" />
+    </div>
+  </header>
+
+  <!-- SINOPSIS -->
+  <section id="sinopsis">
+    <div class="sinopsis-content reveal">
+      <p class="section-label" style="justify-content: center; margin-bottom: 32px;">Sinopsis</p>
+      <p class="sinopsis-text">
+        El disfraz de la "nena nueva" de séptimo B aparece destrozado. La directora cita a los padres a una reunión de emergencia que rápidamente descarrila en acusaciones cruzadas, audios filtrados y un caos desopilante. Mientras intentan resolver el misterio, salen a la luz los secretos y rivalidades más ocultas del grupo.
+      </p>
+    </div>
+  </section>
+
+   <!-- SECCIÓN GALERÍA COMPACTA (4 POR FILA) -->
+  <section id="galeria">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <div class="reveal">
+        <p class="section-label">Galería</p>
+        <h2 class="section-title">Escenas & <em>Detrás de Escena</em></h2>
+      </div>
+
+      <!-- Agregué más ítems para completar filas de 4 de forma simétrica -->
+      <div class="galeria-grid reveal" >
+        <!-- Foto 1 -->
+        <div class="galeria-item">
+          <img src="https://www.multiteatro.com.ar/wp-content/uploads/2026/01/ChatDeMamis_phPAZ-00598-scaled.jpg" alt="Escena 1" loading="lazy" />
+        </div>
+        <!-- Foto 2 -->
+        <div class="galeria-item">
+          <img src="https://www.multiteatro.com.ar/wp-content/uploads/2026/01/ChatDeMamis_phPAZ-00838-scaled.jpg" alt="Escena 2" loading="lazy" />
+        </div>
+        <!-- Foto 3 -->
+        <div class="galeria-item">
+          <img src="https://www.multiteatro.com.ar/wp-content/uploads/2026/01/ChatDeMamis_phPAZ-00920-scaled.jpg" alt="Escena 3" loading="lazy" />
+        </div>
+        <!-- Foto 4 -->
+        <div class="galeria-item">
+          <img src="https://www.multiteatro.com.ar/wp-content/uploads/2026/01/ChatDeMamis_phPAZ-01010-scaled.jpg" alt="Escena 4" loading="lazy" />
+        </div>
+        <!-- Foto 5 -->
+        <div class="galeria-item">
+          <img src="https://www.multiteatro.com.ar/wp-content/uploads/2026/01/ChatDeMamis_phPAZ-01047-scaled.jpg" alt="Escena 5" loading="lazy" />
+        </div>
+        <!-- Foto 6 -->
+        <div class="galeria-item">
+          <img src="https://www.multiteatro.com.ar/wp-content/uploads/2026/01/ChatDeMamis_phPAZ-01458-scaled.jpg" alt="Escena 6" loading="lazy" />
+        </div>
+        <!-- Foto 7 -->
+        <div class="galeria-item">
+          <img src="https://www.multiteatro.com.ar/wp-content/uploads/2026/01/ChatDeMamis_phPAZ-01683-scaled.jpg" alt="Escena 7" loading="lazy" />
+        </div>
+        <!-- Foto 8 -->
+        <div class="galeria-item">
+          <img src="https://www.multiteatro.com.ar/wp-content/uploads/2026/01/ChatDeMamis_phPAZ-02063-scaled.jpg" alt="Escena 8" loading="lazy" />
+        </div>
+        <div class="galeria-item">
+          <img src="https://www.multiteatro.com.ar/wp-content/uploads/2026/01/ChatDeMamis_phPAZ-02068-scaled.jpg" alt="Escena 9" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN VIDEOS CON EL REEL REAL DE INSTAGRAM -->
+  <section id="videos">
+    <div class="videos-inner">
+      <div class="reveal">
+        <p class="section-label">Media</p>
+        <h2 class="section-title">Reels & <em>Contenido Digital</em></h2>
+      </div>
+
+      <!-- Grilla de videos: El primero ya muestra tu Reel real -->
+      <div class="mamis-videos-grid reveal">
+        
+        <!-- Tarjeta 1: Reel de El Chat de Mamis -->
+        <div class="video-card" style="background: #000;">
+          <iframe 
+            src="https://www.instagram.com/reel/DYxEg5GR7A2/embed/" 
+            width="100%" 
+            height="100%" 
+            frameborder="0" 
+            scrolling="no" 
+            allowtransparency="true" 
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+          </iframe>
+        </div>
+
+        <!-- Tarjeta 2: (Espacio para tu próximo Reel, temporalmente con el mismo link de ejemplo) -->
+        <div class="video-card" style="background: #000;">
+          <iframe 
+            src="https://www.instagram.com/reel/DYiGl64pYwo/embed/" 
+            width="100%" 
+            height="100%" 
+            frameborder="0" 
+            scrolling="no" 
+            allowtransparency="true">
+          </iframe>
+        </div>
+
+        <!-- Tarjeta 3: (Espacio para otro Reel de ejemplo) -->
+        <div class="video-card" style="background: #000;">
+          <iframe 
+            src="https://www.instagram.com/reel/DYVWT-nRzW0/embed/" 
+            width="100%" 
+            height="100%" 
+            frameborder="0" 
+            scrolling="no" 
+            allowtransparency="true">
+          </iframe>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-logo">
+          <img src="https://www.lapuertacontenidos.com.ar/img/LaPuertaLogo2.png" alt="La Puerta Contenidos" />
+        </div>
+        <div class="footer-contact">
+          <p class="footer-contact-label">Prensa y Contrataciones</p>
+          <a href="mailto:hola@lapuertacontenidos.com.ar">hola@lapuertacontenidos.com.ar</a>
+        </div>
+        <div class="footer-social">
+          <a href="#" target="_blank" rel="noopener">Instagram Oficial</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 La Puerta Contenidos. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Sticky nav
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Scroll reveal
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }),
+      { threshold: 0.1 }
+    );
+    revealEls.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
