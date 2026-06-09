@@ -80,7 +80,7 @@
     }
     .nav-links a:hover { opacity: 1; color: var(--gold); }
 
-    /* ───── HERO CON VIDEO (AJUSTADO PARA DAR MÁS LUZ) ───── */
+    /* ───── HERO CON VIDEO ───── */
     #hero {
       position: relative;
       height: 100vh;
@@ -107,7 +107,6 @@
     .hero-overlay {
       position: absolute;
       inset: 0;
-      /* Se bajó la opacidad general para que el video se note más claro */
       background: linear-gradient(to bottom, rgba(8,8,8,0.8) 0%, rgba(8,8,8,0.4) 60%, var(--bg) 100%);
       z-index: 1;
     }
@@ -126,6 +125,9 @@
       opacity: 0;
       transform: translateY(30px);
       animation: fadeUp 1.2s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .hero-eyebrow {
       font-family: 'Jost', sans-serif;
@@ -136,17 +138,13 @@
       color: var(--gold);
       margin-bottom: 28px;
     }
-    .hero-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(52px, 8vw, 110px);
-      font-weight: 300;
-      line-height: 0.95;
-      letter-spacing: -0.01em;
-      margin-bottom: 28px;
-    }
-    .hero-title em {
-      font-style: italic;
-      color: var(--gold);
+    .hero-logo-img {
+      max-width: 180px; /* Tamaño mediano/chico refinado */
+      width: 100%;
+      height: auto;
+      filter: brightness(0) invert(1); /* Color Blanco */
+      margin-bottom: 32px;
+      display: block;
     }
     .hero-subtitle {
       font-family: 'Jost', sans-serif;
@@ -158,21 +156,6 @@
       margin: 0 auto 48px;
       line-height: 1.8;
     }
-    .hero-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--text);
-      text-decoration: none;
-      font-size: 11px;
-      font-weight: 400;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      border: 1px solid var(--gold);
-      padding: 14px 32px;
-      transition: background 0.3s, color 0.3s;
-    }
-    .hero-cta:hover { background: var(--gold); color: var(--bg); }
     .hero-scroll {
       position: absolute;
       bottom: 40px;
@@ -206,7 +189,7 @@
     /* ───── SECTION BASE ───── */
     section { padding: 120px 48px; }
     .section-label {
-      font-size: 9px;
+      font-size: 15px;
       font-weight: 500;
       letter-spacing: 0.4em;
       text-transform: uppercase;
@@ -231,7 +214,7 @@
     }
     .section-title em { font-style: italic; color: var(--gold); }
 
-    /* ───── CARTELERA ───── */
+    /* ───── CARTELERA TRIPLE ───── */
     #cartelera {
       background: var(--bg2);
       position: relative;
@@ -244,18 +227,25 @@
       height: 1px;
       background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
     }
-    .cartelera-inner {
-      max-width: 1200px;
+    .cartelera-main-container {
+      max-width: 1400px;
       margin: 0 auto;
+    }
+    .cartelera-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+      align-items: start;
+    }
+    .cartelera-item {
+      display: flex;
+      flex-direction: column;
     }
     .cartelera-img-wrap {
       position: relative;
       aspect-ratio: 1;
       overflow: hidden;
+      margin-bottom: 28px;
     }
     .cartelera-img-wrap::before {
       content: '';
@@ -272,76 +262,139 @@
       transition: transform 0.7s cubic-bezier(0.22,1,0.36,1);
       display: block;
     }
-    .cartelera-img-wrap:hover img { transform: scale(1.04); }
-    .cartelera-badge {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      z-index: 2;
+    .cartelera-item:hover .cartelera-img-wrap img { transform: scale(1.03); }
+    .cartelera-info { padding: 0; }
+    .show-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 3.2vw, 38px);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      letter-spacing: 0.01em;
+      min-height: 84px;
+    }
+    .show-desc {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 32px;
+      text-align: justify;
+    }
+    .cartelera-buttons {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+    }
+    .btn-gold {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       background: var(--gold);
       color: var(--bg);
-      font-size: 9px;
+      text-decoration: none;
+      font-size: 11px;
       font-weight: 500;
-      letter-spacing: 0.3em;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
-      padding: 6px 14px;
+      padding: 14px 16px;
+      transition: opacity 0.3s;
+      white-space: nowrap;
     }
-    .cartelera-info { padding: 20px 0; }
-    .show-title {
+    .btn-gold:hover { opacity: 0.85; }
+    .btn-ghost {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--muted);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 14px 16px;
+      transition: border-color 0.3s, color 0.3s;
+      white-space: nowrap;
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ───── SECCIÓN EN GIRA (FORMATO DE IMAGEN 50/50 ORIGINAL) ───── */
+    #gira {
+      background: var(--bg3);
+      position: relative;
+      overflow: hidden;
+    }
+    #gira::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    }
+    .gira-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .gira-img-wrap {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
+    .gira-img-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border: 1px solid var(--gold-dim);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .gira-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s cubic-bezier(0.22,1,0.36,1);
+      display: block;
+    }
+    .gira-container:hover .gira-img-wrap img { transform: scale(1.04); }
+    
+    .gira-info { padding: 20px 0; }
+    .gira-title {
       font-family: 'Cormorant Garamond', serif;
       font-size: clamp(40px, 5vw, 72px);
       font-weight: 300;
       line-height: 1;
       margin-bottom: 24px;
     }
-    .show-desc {
+    .gira-desc {
       font-size: 15px;
       font-weight: 300;
       color: var(--muted);
       line-height: 1.8;
       margin-bottom: 40px;
-      max-width: 420px;
+      text-align: justify;
     }
-    .btn-gold {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background: var(--gold);
-      color: var(--bg);
-      text-decoration: none;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
+    .gira-buttons {
+      display: flex;
+      gap: 16px;
+    }
+    .gira-buttons .btn-gold, .gira-buttons .btn-ghost {
+      flex: initial;
       padding: 16px 36px;
-      transition: opacity 0.3s;
     }
-    .btn-gold:hover { opacity: 0.85; }
-    .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      border: 1px solid var(--muted);
-      color: var(--text);
-      text-decoration: none;
-      font-size: 11px;
-      font-weight: 400;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      padding: 16px 36px;
-      margin-left: 16px;
-      transition: border-color 0.3s, color 0.3s;
-    }
-    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
 
     /* ───── PRODUCCIONES ───── */
     #producciones {
       background: var(--bg);
-      /* Asegura un espacio uniforme arriba y abajo, y un margen mínimo a los costados */
       padding: 120px 24px; 
     }
     .prod-header {
-      /* Mantiene el texto alineado con el resto de la web (1200px) */
       max-width: 1200px;
       margin: 0 auto 64px;
       display: flex;
@@ -349,17 +402,7 @@
       justify-content: space-between;
       gap: 32px;
     }
-    .prod-count {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 80px;
-      font-weight: 300;
-      color: var(--line);
-      line-height: 1;
-      letter-spacing: -0.02em;
-      user-select: none;
-    }
     .prod-grid {
-      /* Se amplía el límite de 1200px a 1600px para que abra más a los costados */
       max-width: 1600px; 
       margin: 0 auto;
       display: grid;
@@ -371,10 +414,6 @@
       aspect-ratio: 1;
       overflow: hidden;
       cursor: pointer;
-    }
-    .prod-item.featured {
-      grid-column: span 2;
-      aspect-ratio: 2/1;
     }
     .prod-item img {
       width: 100%;
@@ -575,14 +614,16 @@
     }
 
     /* ───── RESPONSIVE ───── */
+    @media (max-width: 1024px) {
+      .cartelera-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+    }
     @media (max-width: 900px) {
       nav { padding: 20px 24px; }
       nav.scrolled { padding: 14px 24px; }
       .nav-links { display: none; }
       section { padding: 80px 24px; }
-      .cartelera-inner { grid-template-columns: 1fr; gap: 40px; }
+      .gira-container { grid-template-columns: 1fr; gap: 48px; }
       .prod-grid { grid-template-columns: 1fr 1fr; }
-      .prod-item.featured { grid-column: span 2; }
       .quienes-inner { grid-template-columns: 1fr; gap: 56px; }
       .stats-grid { grid-template-columns: 1fr 1fr; }
       .prod-header { flex-direction: column; align-items: flex-start; }
@@ -590,13 +631,15 @@
       .footer-top { flex-direction: column; align-items: flex-start; gap: 24px; }
       .footer-contact { text-align: left; }
       .footer-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
-      .btn-ghost { margin-left: 0; margin-top: 12px; }
+    }
+    @media (max-width: 700px) {
+      .cartelera-grid { grid-template-columns: 1fr; gap: 48px; }
+      .show-title { min-height: auto; }
     }
     @media (max-width: 600px) {
       .prod-grid { grid-template-columns: 1fr; }
-      .prod-item.featured { grid-column: span 1; aspect-ratio: 1; }
       .stats-grid { grid-template-columns: 1fr; }
-      .hero-title { font-size: 48px; }
+      .hero-logo-img { max-width: 140px; }
     }
   </style>
 </head>
@@ -608,6 +651,7 @@
     </a>
     <ul class="nav-links">
       <li><a href="#cartelera">Cartelera</a></li>
+      <li><a href="#gira">En Gira</a></li>
       <li><a href="#producciones">Producciones</a></li>
       <li><a href="#quienes">Nosotros</a></li>
       <li><a href="#footer">Contacto</a></li>
@@ -620,13 +664,12 @@
         <source src="https://cdn.pixabay.com/video/2024/11/12/240995_large.mp4" type="video/mp4" />
       </video>
     </div>
-    <!-- Unica capa de overlay optimizada para dar más brillo y luz al video -->
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <p class="hero-eyebrow">Buenos Aires · Desde 1996</p>
-      <h1 class="hero-title">La Puerta<br /><em>Contenidos</em></h1>
+      <!-- Logo mediano/chico estilizado en blanco puro -->
+      <img src="https://www.lapuertacontenidos.com.ar/img/LaPuertaLogo2.png" alt="La Puerta Contenidos" class="hero-logo-img" />
       <p class="hero-subtitle">Productora teatral argentina.<br />Creamos, producimos y comercializamos<br />experiencias escénicas únicas.</p>
-      <a href="#cartelera" class="hero-cta">Ver cartelera</a>
     </div>
     <div class="hero-scroll">
       <div class="scroll-line"></div>
@@ -634,35 +677,114 @@
     </div>
   </section>
 
+  <!-- ───── SECCIÓN CARTELERA TRIPLE ───── -->
   <section id="cartelera">
-    <div class="cartelera-inner">
-      <div class="cartelera-img-wrap reveal">
-        <div class="cartelera-badge">En cartelera</div>
-        <img
-          src="https://imgplateanet.com.ar/imagenes/img/imagenes/1200x1200/el-chat-de-mamis---una-comedia-en-el-cole.jpg"
-          alt="Corto Circuito — Un Viaje en el Tiempo"
-          loading="lazy"
-        />
-      </div>
-      <div class="cartelera-info reveal reveal-delay-2">
-        <p class="section-label">Cartelera 2026</p>
-        <h2 class="show-title">EL CHAT DE MAMIS<br /><em style="font-style:italic;color:var(--gold)">UNA COMEDIA EN EL COLE</em></h2>
-        <p class="show-desc">
-          El disfraz de la "nena nueva" de séptimo B aparece destrozado, por lo cual la directora del colegio cita a las madres y padres a una reunión en el colegio, pero todo termina en acusaciones cruzadas, reclamos, audios de whatsapp y un caos difícil de resolver. Mientras intentan dilucidar qué pasó con los chicos y el disfraz, salen a la luz secretos y rivalidades entre los grandes y se revela un misterio aún mayor, el problema no lo tienen los chicos...sino los grandes. Cuando el chat de mamis se vuelve real, nadie sobrevive!
-        </p>
-        <a
-          href="https://www.plateanet.com/obra/33741?obra=EL-CHAT-DE-MAMIS---UNA-COMEDIA-EN-EL-COLE&paso=inicio"
-          target="_blank"
-          rel="noopener"
-          class="btn-gold"
-        >
-          Comprar entradas
-        </a>
-        <a href="/chatdemamis.html" class="btn-ghost">Ver producciones</a>
+    <div class="cartelera-main-container">
+      <h2 class="section-title reveal reveal-delay-1">Espectáculos en <em>Cartel</em></h2>
+      
+      <div class="cartelera-grid">
+        
+        <!-- Obra 1: El Chat de Mamis -->
+        <div class="cartelera-item reveal reveal-delay-1">
+          <div class="cartelera-img-wrap">
+            <img src="https://imgplateanet.com.ar/imagenes/img/imagenes/1200x1200/el-chat-de-mamis---una-comedia-en-el-cole.jpg" alt="El Chat de Mamis" loading="lazy" />
+          </div>
+          <div class="cartelera-info">
+            <h3 class="show-title">EL CHAT DE MAMIS<br /><em style="font-style:italic;color:var(--gold);font-size: 0.65em; letter-spacing: 0.1em; text-transform: uppercase;">Una comedia en el cole</em></h3>
+            <p class="show-desc">
+              El disfraz de la "nena nueva" de séptimo B aparece destrozado, por lo cual la directora cita a los padres a una reunión, pero todo termina en acusaciones cruzadas, audios de WhatsApp y un caos difícil de resolver. Cuando el chat de mamis se vuelve real, ¡nadie sobrevive!
+            </p>
+            <div class="cartelera-buttons">
+              <a href="https://www.plateanet.com/obra/33741?obra=EL-CHAT-DE-MAMIS---UNA-COMEDIA-EN-EL-COLE&paso=inicio" target="_blank" rel="noopener" class="btn-gold">Entradas</a>
+              <a href="/chatdemamis.html" class="btn-ghost">Ver Más</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Obra 2: La Cena de los Tontos -->
+        <div class="cartelera-item reveal reveal-delay-3">
+          <div class="cartelera-img-wrap">  
+            <img src="https://imgplateanet.com.ar/imagenes/img/imagenes/1200x1200/la-cena-de-los-tontos-_.jpg" alt="La Cena de los Tontos" loading="lazy" />
+          </div>
+          <div class="cartelera-info">
+            <h3 class="show-title">LA CENA DE LOS TONTOS<br /><em style="font-style:italic;color:var(--gold);font-size: 0.65em; letter-spacing: 0.1em; text-transform: uppercase;"></em></h3>
+            <p class="show-desc">
+              "LA CENA DE LOS TONTOS", ¡el éxito teatral vuelve a Buenos Aires por tiempo limitado! Dirigida por Marcos Carnevale, y protagonizada por Martin Bossi, Gustavo Bermudez, Laurita Fernández y gran elenco, la obra ya supera los 200.000 espectadores desde su estreno en 2025.
+            </p>
+            <div class="cartelera-buttons">
+              <a href="https://www.plateanet.com/obra/33879?obra=LA-CENA-DE-LOS-TONTOS-_&paso=inicio" class="btn-gold" target="_blank" rel="noopener">ENTRADAS</a>
+              <a href="#producciones" class="btn-ghost">Info</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Obra 3: Tertawa España -->
+        <div class="cartelera-item reveal reveal-delay-3">
+          <div class="cartelera-img-wrap">  
+            <img src="https://imgplateanet.com.ar/imagenes/img/imagenes/1200x1200/tertawa--delivery-de-humor_.jpg" alt="Tertawa" loading="lazy" />
+          </div>
+          <div class="cartelera-info">
+            <h3 class="show-title">TERTAWA<br /><em style="font-style:italic;color:var(--gold);font-size: 0.65em; letter-spacing: 0.1em; text-transform: uppercase;">Paseo la plaza</em></h3>
+            <p class="show-desc">
+             El espectáculo de humor más esperado de la temporada llega a la Calle Corrientes! Grandes referentes de la comedia nacional, José María Listorti, Pachu Peña y Sebastián Almada, se reúnen en Tertawa, delivery de Humor, un espectáculo desopilante diseñado para disfrutar en familia.
+            </p>
+            <div class="cartelera-buttons">
+              <a href="https://www.plateanet.com/obra/29021?obra=TERTAWA--DELIVERY-DE-HUMOR_&paso=inicio" class="btn-gold" target="_blank" rel="noopener">Entradas</a>
+              <a href="#producciones" class="btn-ghost">Info</a>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
 
+  <section id="cartelera">
+    <div class="cartelera-main-container">
+      <h2 class="section-title reveal reveal-delay-1">Gira y<em> Capital Federal</em></h2>
+      
+      <div class="cartelera-grid">
+        
+        <!-- Obra 1: El Chat de Mamis -->
+        <div class="cartelera-item reveal reveal-delay-1">
+          <div class="cartelera-img-wrap">
+            <img src="https://www.lapuertacontenidos.com.ar/img/corto-circuito%20(1).jpg" alt="Cortocircuito" loading="lazy" />
+          </div>
+          <div class="cartelera-info">
+            <h3 class="show-title">CORTOCIRCUITO<br /><em style="font-style:italic;color:var(--gold);font-size: 0.65em; letter-spacing: 0.1em; text-transform: uppercase;"></em></h3>
+            <p class="show-desc">
+              Corto Circuito" protagonizada por Pedro Alfonso, estrenada en el Teatro del Lago de Villa Carlos Paz, que aborda con humor y tecnología la inteligencia artificial y los vínculos humanos. Bajo la dirección de Diego Ramos. Trama: Situaciones desopilantes y malentendidos generados por la irrupción de un robot con inteligencia artificial en la vida cotidiana
+            </p>
+            <div class="cartelera-buttons">
+              <a href="https://www.plateanet.com/obra/33741?obra=EL-CHAT-DE-MAMIS---UNA-COMEDIA-EN-EL-COLE&paso=inicio" target="_blank" rel="noopener" class="btn-gold">Entradas</a>
+              <a href="/chatdemamis.html" class="btn-ghost">Ver Más</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Obra 3: Tertawa España -->
+        <div class="cartelera-item reveal reveal-delay-3">
+          <div class="cartelera-img-wrap">  
+            <img src="https://instagram.faep24-1.fna.fbcdn.net/v/t51.82787-15/669877638_17941594878177701_8715041444545058618_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=Mzg3MTU3MDY4NzQ5NTgyODY5MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTM1MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=UVdvvqvEhw0Q7kNvwFo1wMV&_nc_oc=Ado-jxEwSEMUBOCyIgU6dbX-S5Aj7rxMGwRGQcCEi8Bv-U8M5dcw5Dch1-DWBWxHMXw&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.faep24-1.fna&_nc_gid=Y-jRUj7QN9xSjLGSL7LeVQ&_nc_ss=7a22e&oh=00_Af-wMeRcrl2vZGDCGouBGymWJmwCCXpSsTmHJQ3gJnr8jg&oe=6A2E51E5" alt="Tertawa" loading="lazy" />
+          </div>
+          <div class="cartelera-info">
+            <h3 class="show-title">TERTAWA<br /><em style="font-style:italic;color:var(--gold);font-size: 0.65em; letter-spacing: 0.1em; text-transform: uppercase;">ESPAÑA</em></h3>
+            <p class="show-desc">
+              Tertawa, Delivery de humor con José María Listorti, Pachu Peña y Sebastián Almada. Los reconocidos humoristas llegan por primera vez a la Gran Vía de Madrid con un show totalmente renovado, humor irreverente y música en vivo en un espectáculo con risas completamente aseguradas.
+            </p>
+            <div class="cartelera-buttons">
+              <a href="https://www.plateanet.com/obra/33879?obra=LA-CENA-DE-LOS-TONTOS-_&paso=inicio" class="btn-gold" target="_blank" rel="noopener">Entradas</a>
+              <a href="#producciones" class="btn-ghost">Info</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ───── PRODUCCIONES ───── -->
   <section id="producciones">
     <div class="prod-header">
       <div class="prod-header-text reveal">
@@ -673,107 +795,44 @@
 
     <div class="prod-grid">
       <div class="prod-item reveal reveal-delay-1">
-        <img
-          src="https://imgplateanet.com.ar/imagenes/img/imagenes/1200x1200/el-chat-de-mamis---una-comedia-en-el-cole.jpg"
-          alt="Producción"
-          loading="lazy"
-        />
-        <div class="prod-overlay">
-          <p class="prod-name">El Chat de mamis</p>
-          <p class="prod-year">Producción</p>
-        </div>
-      </div>
-      <div class="prod-item reveal reveal-delay-1">
-        <img
-          src="https://instagram.faep24-1.fna.fbcdn.net/v/t51.82787-15/669877638_17941594878177701_8715041444545058618_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=Mzg3MTU3MDY4NzQ5NTgyODY5MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTM1MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=Bz6DJ0Q_4PMQ7kNvwEArrb6&_nc_oc=AdpmBLo1cefgx7FXkOD7SW3DCwRpEM7MgQj6Bl7T2Zhp9vipxOYh_KnacQrEJxJHF-0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.faep24-1.fna&_nc_gid=xLw758Lssl0K9f3kjjWrrA&_nc_ss=7a22e&oh=00_Af6t4LYqIuXmEmQ63xjNperx61DspJrU5Qone23dIl0lhg&oe=6A1D2E65"
-          alt="Producción"
-          loading="lazy"
-        />
-        <div class="prod-overlay">
-          <p class="prod-name">Tertawa - España</p>
-          <p class="prod-year">Producción</p>
-        </div>
-      </div>
-      <div class="prod-item reveal reveal-delay-1">
-        <img
-          src="https://www.lapuertacontenidos.com.ar/img/CORBO_UVEET_KEYART_FEED_1080X1080.jpg"
-          alt="Producción"
-          loading="lazy"
-        />
-        <div class="prod-overlay">
-          <p class="prod-name">Cortocircuito</p>
-          <p class="prod-year">Producción</p>
-        </div>
-      </div>
-      <div class="prod-item reveal reveal-delay-1">
-        <img
-          src="https://www.lapuertacontenidos.com.ar/img/MELC_RRS_CUADRADO_1080X1080_6cuotas.jpg"
-          alt="Producción"
-          loading="lazy"
-        />
+        <img src="https://www.lapuertacontenidos.com.ar/img/MELC_RRS_CUADRADO_1080X1080_6cuotas.jpg" alt="Producción" loading="lazy" />
         <div class="prod-overlay">
           <p class="prod-name">Melc</p>
           <p class="prod-year">Producción</p>
         </div>
       </div>
       <div class="prod-item reveal reveal-delay-1">
-        <img
-          src="https://www.lapuertacontenidos.com.ar/img/BOSSI_1200X1200.jpg"
-          alt="Bossi"
-          loading="lazy"
-        />
+        <img src="https://www.lapuertacontenidos.com.ar/img/BOSSI_1200X1200.jpg" alt="Bossi" loading="lazy" />
         <div class="prod-overlay">
           <p class="prod-name">Bossi</p>
           <p class="prod-year">Producción</p>
         </div>
       </div>
       <div class="prod-item reveal reveal-delay-1">
-        <img
-          src="https://www.lapuertacontenidos.com.ar/img/MAXI-COMICO-MONTEVIDEO.jpg"
-          alt="Maxi Cómico Montevideo"
-          loading="lazy"
-        />
+        <img src="https://www.lapuertacontenidos.com.ar/img/MAXI-COMICO-MONTEVIDEO.jpg" alt="Maxi Cómico Montevideo" loading="lazy" />
         <div class="prod-overlay">
           <p class="prod-name">Maxi Cómico</p>
           <p class="prod-year">Montevideo</p>
         </div>
       </div>
-      <div class="prod-item reveal reveal-delay-2">
-        <img
-          src="https://www.lapuertacontenidos.com.ar/img/TERTAWA_PLATEANET-1200X1200.jpg"
-          alt="Tertawa"
-          loading="lazy"
-        />
+      <div class="prod-item reveal reveal-delay-3">
+        <img src="https://www.lapuertacontenidos.com.ar/img/DABOPE_UN%20PLAN%20PERFECTO_TICKETEK_1080x1080_V2.jpg" alt="Un Plan Perfecto" loading="lazy" />
         <div class="prod-overlay">
-          <p class="prod-name">Tertawa</p>
+          <p class="prod-name">Un Plan Perfecto</p>
           <p class="prod-year">Producción</p>
         </div>
       </div>
-      <div class="prod-item reveal reveal-delay-2">
-        <img
-          src="https://www.lapuertacontenidos.com.ar/img/1200x1200-tertawamiami.jpg"
-          alt="Tertawa Miami"
-          loading="lazy"
-        />
-        <div class="prod-overlay">
-          <p class="prod-name">Tertawa Miami</p>
-          <p class="prod-year">Gira internacional</p>
-        </div>
-      </div>
       <div class="prod-item reveal reveal-delay-3">
-        <img
-          src="https://www.lapuertacontenidos.com.ar/img/DABOPE_UN%20PLAN%20PERFECTO_TICKETEK_1080x1080_V2.jpg"
-          alt="Un Plan Perfecto"
-          loading="lazy"
-        />
+        <img src="https://media.canalnet.tv/2022/01/Una-noche-en-el-hotel-3.jpg" alt="Una noche en el Hotel" loading="lazy" />
         <div class="prod-overlay">
-          <p class="prod-name">Un Plan Perfecto</p>
+          <p class="prod-name">Una noche en el Hotel</p>
           <p class="prod-year">Producción</p>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ───── QUIÉNES SOMOS ───── -->
   <section id="quienes">
     <div class="quienes-inner">
       <div>
@@ -812,6 +871,7 @@
     </div>
   </section>
 
+  <!-- ───── FOOTER ───── -->
   <footer id="footer">
     <div class="footer-inner">
       <div class="footer-top">
@@ -830,6 +890,7 @@
         <p class="footer-copy">© 2026 La Puerta Contenidos. Todos los derechos reservados.</p>
         <ul class="footer-nav">
           <li><a href="#cartelera">Cartelera</a></li>
+          <li><a href="#gira">En Gira</a></li>
           <li><a href="#producciones">Producciones</a></li>
           <li><a href="#quienes">Nosotros</a></li>
         </ul>
